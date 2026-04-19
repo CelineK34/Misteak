@@ -1,15 +1,19 @@
-/* Remove Streamlit top padding */
 .block-container {
     padding-top: 1.5rem !important;
     padding-bottom: 1rem !important;
 }
 
-/* Sidebar base */
+footer { display: none !important; }
+
 [data-testid="stSidebar"] {
-    background-color: #0a1f14 !important;
+    background-color: #0d1117 !important;
 }
 
 [data-testid="stSidebarHeader"] {
+    display: none !important;
+}
+
+[data-testid="stSidebarNav"] {
     display: none !important;
 }
 
@@ -19,26 +23,33 @@
     color: #e2e8f0 !important;
 }
 
-/* Nav links */
-[data-testid="stSidebar"] a[data-testid="stPageLink-NavLink"] {
+/* Style the actual page_link buttons to look like nav items */
+[data-testid="stSidebar"] [data-testid="stPageLink-NavLink"] {
     border-radius: 8px !important;
-    color: #94a3b8 !important;
     padding: 10px 14px !important;
     font-size: 14px !important;
+    color: #94a3b8 !important;
+    background: transparent !important;
     margin-bottom: 4px !important;
+    display: flex !important;
+    align-items: center !important;
+    gap: 10px !important;
+    text-decoration: none !important;
 }
 
-[data-testid="stSidebar"] a[data-testid="stPageLink-NavLink"]:hover {
-    background: #1a3328 !important;
-    color: #ffffff !important;
+[data-testid="stSidebar"] [data-testid="stPageLink-NavLink"]:hover {
+    background: #1a2a1a !important;
+    color: #e2e8f0 !important;
 }
 
-[data-testid="stSidebar"] a[data-testid="stPageLink-NavLink"][aria-current="page"] {
-    background: #1a3328 !important;
+[data-testid="stSidebar"] [data-testid="stPageLink-NavLink"][aria-current="page"] {
+    background: #1a2a1a !important;
     color: #4ade80 !important;
     font-weight: 600 !important;
 }
 
-[data-testid="stSidebarNav"] { display: none !important; }
-
-footer { display: none !important; }
+[data-testid="stSidebar"] [data-testid="stPageLink-NavLink"] p {
+    color: inherit !important;
+    font-size: 14px !important;
+    margin: 0 !important;
+}

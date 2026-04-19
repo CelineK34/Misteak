@@ -48,3 +48,111 @@ needs_attention_df = pd.DataFrame({
     "Revenue": ["RM 690", "RM 450"],
     "Margin":  ["75.0%", "55.0%"]
 })
+
+# 5. AI Alerts
+alerts_data = [
+    {
+        "icon": "⚠️",
+        "icon_bg": "#fef3c7",
+        "title": "Mee Goreng sales declining",
+        "badge": "WARNING",
+        "badge_bg": "#f59e0b",
+        "badge_color": "white",
+        "desc": "Mee Goreng Mamak sales dropped 20% over the past 3 days. Customer ratings also fell from 4.3 to 4.0.",
+        "metric_value": "-20% sales",
+        "impact_value": "RM 58.80/day lost",
+    },
+    {
+        "icon": "↗️",
+        "icon_bg": "#dcfce7",
+        "title": "Teh Tarik is your star performer",
+        "badge": "OPPORTUNITY",
+        "badge_bg": "#16a34a",
+        "badge_color": "white",
+        "desc": "Teh Tarik has the highest profit margin (76%) and strongest demand growth. Consider upselling combos.",
+        "metric_value": "76% margin",
+        "impact_value": "+RM 45/day potential",
+    },
+    {
+        "icon": "🔥",
+        "icon_bg": "#fee2e2",
+        "title": "Ais Kacang low weekend demand",
+        "badge": "CRITICAL",
+        "badge_bg": "#ef4444",
+        "badge_color": "white",
+        "desc": "Ais Kacang demand drops 33% on weekdays vs weekends. Over-preparation is causing food waste.",
+        "metric_value": "33% waste risk",
+        "impact_value": "RM 22.50/day waste",
+    },
+    {
+        "icon": "↗️",
+        "icon_bg": "#dcfce7",
+        "title": "Weekend surge pattern detected",
+        "badge": "OPPORTUNITY",
+        "badge_bg": "#16a34a",
+        "badge_color": "white",
+        "desc": "All items see 15-25% higher demand on weekends. Prepare extra inventory for Saturday and Sunday.",
+        "metric_value": "+25% demand",
+        "impact_value": "RM 120/weekend gain",
+    },
+]
+
+# 6. Strategies
+strategies_data = [
+    {
+        "icon": "🟢",
+        "title": "Bundle Nasi Lemak + Teh Tarik",
+        "risk": "Medium Risk",
+        "risk_color": "#f59e0b",
+        "profit_impact": "+22%",
+        "desc": "Create a combo meal at RM 9.90 (vs RM 11.00 separate). Increases average order value and moves two top items together.",
+        "confidence": 85,
+        "actions": ["Create combo menu signage", "Train staff on bundle offer", "Track combo vs individual sales"]
+    },
+    {
+        "icon": "🟢",
+        "title": "Reduce Mee Goreng price to RM 6.50",
+        "risk": "Low Risk",
+        "risk_color": "#16a34a",
+        "profit_impact": "+15%",
+        "desc": "A small price reduction to revive demand. Based on price elasticity analysis, a 7% cut could boost volume by 15%.",
+        "confidence": 78,
+        "actions": ["Update menu pricing", "Announce via social media", "Monitor for 2 weeks"]
+    },
+    {
+        "icon": "🟢",
+        "title": "Weekend Ais Kacang promotion",
+        "risk": "High Risk",
+        "risk_color": "#ef4444",
+        "profit_impact": "+30%",
+        "desc": "Run 'Buy 1 free 1' on weekdays to clear excess inventory and reduce waste. Weekend price stays the same.",
+        "confidence": 72,
+        "actions": ["Prepare weekday promo materials", "Reduce weekday prep by 20%", "Track daily waste levels"]
+    },
+    {
+        "icon": "🟢",
+        "title": "Roti Canai price increase to RM 2.50",
+        "risk": "Low Risk",
+        "risk_color": "#16a34a",
+        "profit_impact": "+18%",
+        "desc": "With 75% margin and stable demand, a RM 0.50 increase would significantly boost profit with minimal volume loss.",
+        "confidence": 82,
+        "actions": ["Gradual price increase", "Add value with extra dhal", "Monitor customer response"]
+    },
+]
+
+# 7. Best recommendation (for Decision page)
+best_recommendation = {
+    "title": "Bundle Nasi Lemak + Teh Tarik",
+    "risk": "Medium Risk",
+    "risk_color": "#f59e0b",
+    "profit_impact": "+22%",
+    "desc": "Create a combo meal at RM 9.90 (vs RM 11.00 separate). Increases average order value and moves two top items together.",
+    "confidence": 85,
+    "actions": ["Create combo menu signage", "Train staff on bundle offer", "Track combo vs individual sales"],
+    "why": "This strategy has the best balance of profit impact and risk. Nasi Lemak Special and Teh Tarik are already your top 2 performers — bundling them requires zero new inventory and minimal staff training.",
+    "expected_revenue": "RM 11,200",
+    "expected_profit": "RM 7,500",
+    "expected_orders": "2,300",
+    "timeline": "2 weeks",
+}

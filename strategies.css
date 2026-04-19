@@ -1,0 +1,116 @@
+.strategy-table {
+    background: white;
+    border-radius: 12px;
+    padding: 20px;
+    border: 0.5px solid #e2e8f0;
+    margin-bottom: 24px;
+    width: 100%;
+}
+
+.strategy-table table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 14px;
+}
+
+.strategy-table th {
+    text-align: left;
+    color: #64748b;
+    font-weight: 500;
+    font-size: 13px;
+    padding: 8px 12px;
+    border-bottom: 0.5px solid #e2e8f0;
+}
+
+.strategy-table td {
+    padding: 12px;
+    color: #0f172a;
+    border-bottom: 0.5px solid #f1f5f9;
+}
+
+.strategy-card {
+    background: white;
+    border-radius: 12px;
+    padding: 20px;
+    border: 0.5px solid #e2e8f0;
+    height: 100%;
+}
+
+.strategy-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 8px;
+}
+
+.strategy-card-title {
+    font-weight: 700;
+    font-size: 15px;
+    color: #0f172a;
+}
+
+.strategy-profit {
+    font-weight: 700;
+    font-size: 16px;
+    color: #16a34a;
+    text-align: right;
+}
+
+.strategy-profit-label {
+    font-size: 10px;
+    color: #94a3b8;
+    text-align: right;
+}
+
+.strategy-risk {
+    font-size: 11px;
+    font-weight: 600;
+    margin-bottom: 10px;
+}
+
+.strategy-desc {
+    font-size: 13px;
+    color: #64748b;
+    margin-bottom: 14px;
+    line-height: 1.5;
+}
+
+.strategy-confidence-label {
+    font-size: 11px;
+    color: #94a3b8;
+    margin-bottom: 4px;
+}
+
+.strategy-confidence-bar {
+    background: #f1f5f9;
+    border-radius: 4px;
+    height: 6px;
+    margin-bottom: 4px;
+}
+
+.strategy-confidence-fill {
+    background: #16a34a;
+    border-radius: 4px;
+    height: 6px;
+}
+
+.strategy-confidence-value {
+    font-size: 12px;
+    color: #0f172a;
+    font-weight: 600;
+    text-align: right;
+}
+
+.strategy-actions-title {
+    font-size: 11px;
+    font-weight: 600;
+    color: #94a3b8;
+    letter-spacing: 0.06em;
+    margin: 14px 0 6px 0;
+}
+
+.strategy-action-item {
+    font-size: 13px;
+    color: #0f172a;
+    padding: 2px 0;
+}
