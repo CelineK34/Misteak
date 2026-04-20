@@ -6,7 +6,6 @@ import dummy_data
 with open('dashboard.css') as f:
     st.markdown(f'<style>{f.read()}</style>', unsafe_allow_html=True)
 
-# ── Header ───────────────────────────────────────────────────
 st.markdown("<h1 class='page-title'>Dashboard</h1>", unsafe_allow_html=True)
 st.markdown("<p style='color:#64748b;margin-top:-12px'>Your F&B business performance at a glance</p>",
             unsafe_allow_html=True)
@@ -45,37 +44,25 @@ c1, c2 = st.columns([2, 1])
 with c1:
     fig = go.Figure()
     fig.add_trace(go.Scatter(
-        x=dummy_data.trend_df["Date"],
-        y=dummy_data.trend_df["Revenue"],
-        name="Revenue",
+        x=df["Date"], y=df["Revenue"], name="Revenue",
         mode="lines",
-        line=dict(color="#0d9488", width=2.5, shape="spline", smoothing=1.3),
-        fill="tozeroy",
-        fillcolor="rgba(13,148,136,0.10)"
+        line=dict(color="#008b5b", width=2.5, shape="spline", smoothing=1.3),
+        fill="tozeroy", fillcolor="rgba(0,139,91,0.10)"
     ))
     fig.add_trace(go.Scatter(
-        x=dummy_data.trend_df["Date"],
-        y=dummy_data.trend_df["Profit"],
-        name="Profit",
+        x=df["Date"], y=df["Profit"], name="Profit",
         mode="lines",
-        line=dict(color="#67e8f9", width=2, shape="spline", smoothing=1.3),
-        fill="tozeroy",
-        fillcolor="rgba(103,232,249,0.15)"   # lighter mint fill
+        line=dict(color="#5ecfa0", width=2, shape="spline", smoothing=1.3),
+        fill="tozeroy", fillcolor="rgba(94,207,160,0.10)"
     ))
     fig.update_layout(
         plot_bgcolor="white", paper_bgcolor="white",
         font=dict(color="#1e293b", size=12),
-        xaxis=dict(
-            gridcolor="#f1f5f9", linecolor="#e2e8f0",
-            showgrid=True,
-            tickformat="%b %d\n%Y"           # matches "Jan 12\n2024" format
-        ),
+        xaxis=dict(gridcolor="#f1f5f9", linecolor="#e2e8f0", showgrid=True,
+                   tickformat="%b %d\n%Y"),
         yaxis=dict(gridcolor="#f1f5f9", linecolor="#e2e8f0", showgrid=True),
-        legend=dict(
-            orientation="h", yanchor="bottom", y=1.02,
-            xanchor="right", x=1,
-            bgcolor="rgba(0,0,0,0)"
-        ),
+        legend=dict(orientation="h", yanchor="bottom", y=1.02,
+                    xanchor="right", x=1, bgcolor="rgba(0,0,0,0)"),
         margin=dict(l=10, r=10, t=30, b=10),
         hovermode="x unified"
     )
@@ -89,22 +76,15 @@ with c1:
 
 with c2:
     fig2 = px.bar(
-        dummy_data.item_profit_df,
-        x="Profit", y="Item", orientation='h',
-        color_discrete_sequence=["#16a34a"],
+        dummy_data.item_profit_df, x="Profit", y="Item",
+        orientation='h', color_discrete_sequence=["#008b5b"],
     )
     fig2.update_layout(
         plot_bgcolor="white", paper_bgcolor="white",
         font=dict(color="#1e293b", size=12),
         showlegend=False,
-        xaxis=dict(
-            gridcolor="#f1f5f9", linecolor="#e2e8f0",
-            title="Profit"                   # matches image 2
-        ),
-        yaxis=dict(
-            gridcolor="#f1f5f9", linecolor="#e2e8f0",
-            title=""                         # no "Item" label on y axis
-        ),
+        xaxis=dict(gridcolor="#f1f5f9", linecolor="#e2e8f0", title="Profit"),
+        yaxis=dict(gridcolor="#f1f5f9", linecolor="#e2e8f0", title=""),
         margin=dict(l=10, r=10, t=30, b=10),
     )
     st.markdown("""
@@ -117,9 +97,9 @@ with c2:
 
 # ── Performer Cards ───────────────────────────────────────────
 def render_row(rank, name, margin, revenue, is_top):
-    badge_bg  = "#dcfce7" if is_top else ["#fee2e2","#fef3c7","#fef3c7"][min(rank-1,2)]
-    badge_txt = "#166534" if is_top else ["#991b1b","#92400e","#92400e"][min(rank-1,2)]
-    val_color = "#16a34a" if is_top else "#64748b"
+    badge_bg  = "#d0f5e8" if is_top else ["#fee2e2","#fef3c7","#fef3c7"][min(rank-1,2)]
+    badge_txt = "#005c3e" if is_top else ["#991b1b","#92400e","#92400e"][min(rank-1,2)]
+    val_color = "#008b5b" if is_top else "#64748b"
     return f"""
     <div style="display:flex;align-items:center;justify-content:space-between;
                 background:#f8fafc;border-radius:10px;padding:14px 16px;margin-bottom:10px;">

@@ -23,7 +23,6 @@ footer { display: none !important; }
     color: #e2e8f0 !important;
 }
 
-/* Style the actual page_link buttons to look like nav items */
 [data-testid="stSidebar"] [data-testid="stPageLink-NavLink"] {
     border-radius: 8px !important;
     padding: 10px 14px !important;
@@ -31,20 +30,17 @@ footer { display: none !important; }
     color: #94a3b8 !important;
     background: transparent !important;
     margin-bottom: 4px !important;
-    display: flex !important;
-    align-items: center !important;
-    gap: 10px !important;
     text-decoration: none !important;
 }
 
 [data-testid="stSidebar"] [data-testid="stPageLink-NavLink"]:hover {
-    background: #1a2a1a !important;
+    background: #0d2b1e !important;
     color: #e2e8f0 !important;
 }
 
 [data-testid="stSidebar"] [data-testid="stPageLink-NavLink"][aria-current="page"] {
-    background: #1a2a1a !important;
-    color: #4ade80 !important;
+    background: #0d2b1e !important;
+    color: #00c47a !important;
     font-weight: 600 !important;
 }
 
@@ -53,3 +49,5 @@ footer { display: none !important; }
     font-size: 14px !important;
     margin: 0 !important;
 }
+
+[data-testid="stSidebarNav"] { display: none !important; }

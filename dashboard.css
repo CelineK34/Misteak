@@ -59,10 +59,9 @@
     font-weight: 500;
 }
 
-.trend-up   { background: #dcfce7; color: #166534; }
+.trend-up   { background: #d0f5e8; color: #005c3e; }
 .trend-down { background: #fee2e2; color: #991b1b; }
 
-/* Plotly chart card styling */
 [data-testid="stPlotlyChart"] {
     background: white !important;
     border-radius: 0 0 16px 16px !important;

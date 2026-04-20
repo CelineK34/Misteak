@@ -8,7 +8,7 @@ kpi_data = {
     "Avg Margin":    {"value": "66.2%", "trend": 2, "is_positive": True}
 }
 
-# 2. Trend Chart — more points = smoother, more dramatic curve
+# 2. Trend Chart
 trend_df = pd.DataFrame({
     "Date": [
         "2024-01-01","2024-01-08","2024-01-15","2024-01-22","2024-01-29",
@@ -30,13 +30,13 @@ trend_df = pd.DataFrame({
     ]
 })
 
-# 3. Item Profit — shorter names, matches image 2
+# 3. Item Profit
 item_profit_df = pd.DataFrame({
     "Item":   ["Nasi Lemak", "Roti Canai", "Teh Tarik", "Mee Goreng", "Satay"],
     "Profit": [1200, 800, 600, 550, 400]
 })
 
-# 4. Tables
+# 4. Top Performers & Needs Attention
 top_performers_df = pd.DataFrame({
     "Item":    ["Nasi Lemak Special", "Teh Tarik Ais", "Roti Bakar"],
     "Revenue": ["RM 2,343", "RM 1,200", "RM 890"],
@@ -64,10 +64,10 @@ alerts_data = [
     },
     {
         "icon": "↗️",
-        "icon_bg": "#dcfce7",
+        "icon_bg": "#d0f5e8",
         "title": "Teh Tarik is your star performer",
         "badge": "OPPORTUNITY",
-        "badge_bg": "#16a34a",
+        "badge_bg": "#008b5b",
         "badge_color": "white",
         "desc": "Teh Tarik has the highest profit margin (76%) and strongest demand growth. Consider upselling combos.",
         "metric_value": "76% margin",
@@ -86,10 +86,10 @@ alerts_data = [
     },
     {
         "icon": "↗️",
-        "icon_bg": "#dcfce7",
+        "icon_bg": "#d0f5e8",
         "title": "Weekend surge pattern detected",
         "badge": "OPPORTUNITY",
-        "badge_bg": "#16a34a",
+        "badge_bg": "#008b5b",
         "badge_color": "white",
         "desc": "All items see 15-25% higher demand on weekends. Prepare extra inventory for Saturday and Sunday.",
         "metric_value": "+25% demand",
@@ -100,7 +100,6 @@ alerts_data = [
 # 6. Strategies
 strategies_data = [
     {
-        "icon": "🟢",
         "title": "Bundle Nasi Lemak + Teh Tarik",
         "risk": "Medium Risk",
         "risk_color": "#f59e0b",
@@ -110,17 +109,15 @@ strategies_data = [
         "actions": ["Create combo menu signage", "Train staff on bundle offer", "Track combo vs individual sales"]
     },
     {
-        "icon": "🟢",
         "title": "Reduce Mee Goreng price to RM 6.50",
         "risk": "Low Risk",
-        "risk_color": "#16a34a",
+        "risk_color": "#008b5b",
         "profit_impact": "+15%",
         "desc": "A small price reduction to revive demand. Based on price elasticity analysis, a 7% cut could boost volume by 15%.",
         "confidence": 78,
         "actions": ["Update menu pricing", "Announce via social media", "Monitor for 2 weeks"]
     },
     {
-        "icon": "🟢",
         "title": "Weekend Ais Kacang promotion",
         "risk": "High Risk",
         "risk_color": "#ef4444",
@@ -130,10 +127,9 @@ strategies_data = [
         "actions": ["Prepare weekday promo materials", "Reduce weekday prep by 20%", "Track daily waste levels"]
     },
     {
-        "icon": "🟢",
         "title": "Roti Canai price increase to RM 2.50",
         "risk": "Low Risk",
-        "risk_color": "#16a34a",
+        "risk_color": "#008b5b",
         "profit_impact": "+18%",
         "desc": "With 75% margin and stable demand, a RM 0.50 increase would significantly boost profit with minimal volume loss.",
         "confidence": 82,
@@ -141,7 +137,7 @@ strategies_data = [
     },
 ]
 
-# 7. Best recommendation (for Decision page)
+# 7. Best Recommendation
 best_recommendation = {
     "title": "Bundle Nasi Lemak + Teh Tarik",
     "risk": "Medium Risk",
@@ -155,4 +151,13 @@ best_recommendation = {
     "expected_profit": "RM 7,500",
     "expected_orders": "2,300",
     "timeline": "2 weeks",
+}
+
+# 8. Simulator Data
+simulator_items = {
+    "Nasi Lemak Special": {"price": 8.50, "cost": 3.20, "qty": 450, "elasticity": -1.2},
+    "Teh Tarik":          {"price": 2.50, "cost": 0.60, "qty": 380, "elasticity": -0.8},
+    "Roti Canai":         {"price": 2.00, "cost": 0.50, "qty": 520, "elasticity": -1.0},
+    "Mee Goreng Mamak":   {"price": 7.00, "cost": 2.80, "qty": 310, "elasticity": -1.3},
+    "Ais Kacang":         {"price": 4.50, "cost": 1.50, "qty": 280, "elasticity": -0.9},
 }
