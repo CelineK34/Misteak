@@ -151,6 +151,11 @@ best_recommendation = {
     "expected_profit": "RM 7,500",
     "expected_orders": "2,300",
     "timeline": "2 weeks",
+    "other_options": [
+        {"title": "Reduce Mee Goreng price to RM 6.50", "risk": "Low", "confidence": 78, "profit_impact": "+15%"},
+        {"title": "Weekend Ais Kacang promotion",        "risk": "High", "confidence": 72, "profit_impact": "+30%"},
+        {"title": "Roti Canai price increase to RM 2.50","risk": "Low", "confidence": 82, "profit_impact": "+18%"},
+    ]
 }
 
 # 8. Simulator Data
