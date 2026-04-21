@@ -6,7 +6,8 @@ import dummy_data
 with open('dashboard.css') as f:
     st.markdown(f'<style>{f.read()}</style>', unsafe_allow_html=True)
 
-st.markdown("<h1 class='page-title'>Dashboard</h1>", unsafe_allow_html=True)
+st.markdown("<h1 style='font-size:28px;font-weight:700;color:#0f172a;margin-bottom:4px;'>Dashboard</h1>",
+            unsafe_allow_html=True)
 st.markdown("<p style='color:#64748b;margin-top:-12px'>Your F&B business performance at a glance</p>",
             unsafe_allow_html=True)
 

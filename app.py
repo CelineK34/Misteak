@@ -5,6 +5,16 @@ st.set_page_config(page_title="FoodAI", layout="wide", page_icon="🍜")
 with open('style.css') as f:
     st.markdown(f'<style>{f.read()}</style>', unsafe_allow_html=True)
 
+# Define pages FIRST
+dashboard = st.Page("pages/1_dashboard.py", title="Dashboard",  icon="🏠")
+insights  = st.Page("pages/2_Insights.py",  title="AI Alerts",  icon="🔔")
+strategy  = st.Page("pages/3_Strategy.py",  title="Strategies", icon="♟️")
+settings  = st.Page("pages/4_Settings.py",  title="Simulator",  icon="⚙️")
+decision  = st.Page("pages/5_Decision.py",  title="Decision",   icon="🏆")
+
+pg = st.navigation([dashboard, insights, strategy, settings, decision], position="hidden")
+
+# Sidebar AFTER pages are defined
 with st.sidebar:
     st.markdown("""
     <div style="display:flex;align-items:center;gap:10px;padding:20px 8px 16px;">
@@ -26,11 +36,12 @@ with st.sidebar:
     <hr style="border:none;border-top:1px solid #1e2a1e;margin:0 0 8px 0;">
     """, unsafe_allow_html=True)
 
-    st.page_link("pages/1_dashboard.py", label="Dashboard",   icon="🏠")
-    st.page_link("pages/2_Insights.py",  label="AI Alerts",   icon="🔔")
-    st.page_link("pages/3_Strategy.py",  label="Strategies",  icon="♟️")
-    st.page_link("pages/4_Settings.py",  label="Simulator",   icon="⚙️")
-    st.page_link("pages/5_Decision.py",  label="Decision",    icon="🏆")
+    # Pass page OBJECTS not file path strings
+    st.page_link(dashboard, label="Dashboard",  icon="🏠")
+    st.page_link(insights,  label="AI Alerts",  icon="🔔")
+    st.page_link(strategy,  label="Strategies", icon="♟️")
+    st.page_link(settings,  label="Simulator",  icon="⚙️")
+    st.page_link(decision,  label="Decision",   icon="🏆")
 
     st.markdown("""
     <div style="position:fixed;bottom:16px;left:8px;width:218px;
@@ -41,11 +52,4 @@ with st.sidebar:
     </div>
     """, unsafe_allow_html=True)
 
-dashboard = st.Page("pages/1_dashboard.py", title="Dashboard",  icon="🏠")
-insights  = st.Page("pages/2_Insights.py",  title="AI Alerts",  icon="🔔")
-strategy  = st.Page("pages/3_Strategy.py",  title="Strategies", icon="♟️")
-settings  = st.Page("pages/4_Settings.py",  title="Simulator",  icon="⚙️")
-decision  = st.Page("pages/5_Decision.py",  title="Decision",   icon="🏆")
-
-pg = st.navigation([dashboard, insights, strategy, settings, decision], position="hidden")
 pg.run()
