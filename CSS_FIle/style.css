@@ -1,0 +1,145 @@
+/* ── Global Reset & Base ── */
+*, *::before, *::after { box-sizing: border-box; }
+
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&family=DM+Mono:wght@400;500&display=swap');
+
+:root {
+    --green:       #008b5b;
+    --green-dark:  #005c3e;
+    --green-light: #d0f5e8;
+    --green-xlight:#f0fdf8;
+    --amber:       #f59e0b;
+    --red:         #ef4444;
+    --text:        #0f172a;
+    --text-muted:  #64748b;
+    --text-faint:  #94a3b8;
+    --border:      #e2e8f0;
+    --border-faint:#f1f5f9;
+    --bg:          #f8fafc;
+    --white:       #ffffff;
+    --radius:      12px;
+    --shadow-sm:   0 1px 3px rgba(0,0,0,0.06), 0 1px 2px rgba(0,0,0,0.04);
+    --shadow:      0 4px 12px rgba(0,0,0,0.06), 0 2px 4px rgba(0,0,0,0.04);
+}
+
+/* ── Streamlit Shell Overrides ── */
+.block-container {
+    padding-top: 1.5rem !important;
+    padding-bottom: 2rem !important;
+    max-width: 1200px !important;
+}
+
+footer { display: none !important; }
+
+[data-testid="stSidebar"] {
+    background-color: #0a0f0a !important;
+}
+
+[data-testid="stSidebarHeader"] { display: none !important; }
+[data-testid="stSidebarNav"]    { display: none !important; }
+
+[data-testid="stSidebar"] p,
+[data-testid="stSidebar"] span,
+[data-testid="stSidebar"] div {
+    color: #e2e8f0 !important;
+}
+
+[data-testid="stSidebar"] [data-testid="stPageLink-NavLink"] {
+    border-radius: 8px !important;
+    padding: 10px 14px !important;
+    font-size: 14px !important;
+    color: #64748b !important;
+    background: transparent !important;
+    margin-bottom: 4px !important;
+    text-decoration: none !important;
+}
+
+[data-testid="stSidebar"] [data-testid="stPageLink-NavLink"]:hover {
+    background: #0d2b1e !important;
+    color: #e2e8f0 !important;
+}
+
+[data-testid="stSidebar"] [data-testid="stPageLink-NavLink"][aria-current="page"] {
+    background: #0d2b1e !important;
+    color: #00c47a !important;
+    font-weight: 600 !important;
+}
+
+[data-testid="stSidebar"] [data-testid="stPageLink-NavLink"] p {
+    color: inherit !important;
+    font-size: 14px !important;
+    margin: 0 !important;
+}
+
+/* ── Shared Button Style ── */
+[data-testid="stButton"] button {
+    background-color: var(--green) !important;
+    border-color: var(--green) !important;
+    color: white !important;
+    border-radius: 8px !important;
+    font-weight: 600 !important;
+    padding: 8px 20px !important;
+    font-size: 14px !important;
+}
+[data-testid="stButton"] button:hover {
+    background-color: var(--green-dark) !important;
+    border-color: var(--green-dark) !important;
+}
+
+/* ── Shared Page Header ── */
+.page-header-title {
+    font-size: 28px;
+    font-weight: 700;
+    color: var(--text);
+    margin-bottom: 4px;
+    letter-spacing: -0.5px;
+}
+
+.page-header-sub {
+    color: var(--text-muted);
+    font-size: 14px;
+    margin-top: -12px;
+    margin-bottom: 24px;
+}
+
+/* ── Shared Card ── */
+.card {
+    background: var(--white);
+    border-radius: var(--radius);
+    border: 0.5px solid var(--border);
+    padding: 24px;
+    box-shadow: var(--shadow-sm);
+}
+
+/* ── Shared Risk Badges ── */
+.risk-badge {
+    font-size: 11px;
+    font-weight: 600;
+    padding: 3px 10px;
+    border-radius: 20px;
+    display: inline-block;
+}
+.risk-low  { background: var(--green-light); color: var(--green-dark); }
+.risk-med  { background: #fef3c7; color: #92400e; }
+.risk-high { background: #fee2e2; color: #991b1b; }
+
+/* ── Shared Page Footer ── */
+.page-footer {
+    margin-top: 40px;
+    text-align: center;
+    color: var(--text-faint);
+    font-size: 12px;
+    border-top: 1px solid var(--border);
+    padding-top: 16px;
+}
+
+/* ── Plotly Chart Wrapper ── */
+[data-testid="stPlotlyChart"] {
+    background: white !important;
+    border-radius: 0 0 16px 16px !important;
+    border: 0.5px solid var(--border) !important;
+    border-top: none !important;
+    padding: 0 8px 8px 8px !important;
+    margin-top: -8px !important;
+}
+[data-testid="stPlotlyChart"] > div { background: transparent !important; }

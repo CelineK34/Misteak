@@ -1,0 +1,119 @@
+/* ── Dashboard: Alert Banner ── */
+.alert-box {
+    background-color: #fffbeb;
+    border-left: 4px solid #ca8a04;
+    border-radius: 0 8px 8px 0;
+    padding: 12px 20px;
+    margin-bottom: 24px;
+    display: flex;
+    align-items: center;
+}
+.alert-text {
+    color: #713f12;
+    font-weight: 500;
+    font-size: 14px;
+}
+
+/* ── Dashboard: KPI Grid ── */
+.kpi-card-container {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 16px;
+    margin-bottom: 24px;
+}
+.metric-card {
+    background: white;
+    border: 0.5px solid #e2e8f0;
+    border-radius: 12px;
+    padding: 20px;
+    transition: transform 0.15s, box-shadow 0.15s;
+}
+.metric-card:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.06);
+}
+.metric-title {
+    font-size: 11px;
+    letter-spacing: 0.07em;
+    text-transform: uppercase;
+    color: #94a3b8;
+    font-weight: 600;
+    margin-bottom: 10px;
+}
+.metric-value {
+    font-size: 26px;
+    font-weight: 700;
+    color: #0f172a;
+    letter-spacing: -0.5px;
+    margin-bottom: 8px;
+}
+.trend-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 12px;
+    padding: 3px 8px;
+    border-radius: 20px;
+    font-weight: 500;
+}
+.trend-up   { background: #d0f5e8; color: #005c3e; }
+.trend-down { background: #fee2e2; color: #991b1b; }
+
+/* ── Dashboard: Chart Header ── */
+.chart-header {
+    background: white;
+    border-radius: 16px 16px 0 0;
+    padding: 20px 20px 0 20px;
+    border: 0.5px solid #e2e8f0;
+    border-bottom: none;
+}
+.chart-header-title {
+    font-weight: 700;
+    font-size: 15px;
+    color: #0f172a;
+}
+.chart-header-sub {
+    font-size: 12px;
+    color: #64748b;
+    margin-top: 2px;
+}
+
+/* ── Dashboard: Performers ── */
+.performer-card {
+    background: white;
+    border-radius: 14px;
+    padding: 20px;
+    border: 0.5px solid #e2e8f0;
+    margin-top: 16px;
+}
+.performer-card-title {
+    font-weight: 700;
+    font-size: 15px;
+    color: #0f172a;
+    margin-bottom: 14px;
+}
+.performer-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: #f8fafc;
+    border-radius: 10px;
+    padding: 12px 16px;
+    margin-bottom: 10px;
+}
+.performer-row:last-child { margin-bottom: 0; }
+.performer-inner { display: flex; align-items: center; gap: 14px; }
+.performer-rank {
+    width: 28px; height: 28px;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 13px; font-weight: 600;
+    flex-shrink: 0;
+}
+.rank-top  { background: #d0f5e8; color: #005c3e; }
+.rank-attn { background: #fee2e2; color: #991b1b; }
+.performer-name { font-weight: 600; color: #0f172a; font-size: 14px; }
+.performer-meta { color: #64748b; font-size: 12px; margin-top: 1px; }
+.performer-revenue { font-weight: 700; font-size: 14px; }
+.revenue-top  { color: #008b5b; }
+.revenue-attn { color: #64748b; }

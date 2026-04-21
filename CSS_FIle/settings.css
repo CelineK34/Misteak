@@ -1,0 +1,88 @@
+/* ── Settings / Upload Data Page ── */
+.upload-dropzone {
+    border: 2px dashed #e2e8f0;
+    border-radius: 10px;
+    padding: 36px;
+    text-align: center;
+    cursor: pointer;
+    transition: border-color 0.2s;
+    margin-bottom: 0;
+}
+.upload-dropzone:hover { border-color: #008b5b; }
+
+.upload-dropzone-icon { font-size: 32px; margin-bottom: 10px; }
+.upload-dropzone-title {
+    font-size: 15px;
+    font-weight: 600;
+    color: #0f172a;
+    margin-bottom: 6px;
+}
+.upload-dropzone-sub {
+    font-size: 13px;
+    color: #64748b;
+    margin-bottom: 14px;
+}
+.upload-format-tags {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+.upload-format-tag {
+    font-size: 11px;
+    padding: 4px 10px;
+    border: 1px solid #e2e8f0;
+    border-radius: 6px;
+    color: #64748b;
+    background: white;
+}
+
+/* ── Settings: Manual Entry Form ── */
+.settings-card {
+    background: white;
+    border-radius: 14px;
+    padding: 24px;
+    border: 0.5px solid #e2e8f0;
+    margin-bottom: 16px;
+}
+.settings-card-title {
+    font-weight: 700;
+    font-size: 15px;
+    color: #0f172a;
+    margin-bottom: 16px;
+}
+
+/* ── Settings: AI Process Steps ── */
+.ai-process-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+}
+.ai-process-step {
+    background: #f8fafc;
+    border-radius: 10px;
+    padding: 14px;
+    text-align: center;
+}
+.ai-process-icon { font-size: 22px; margin-bottom: 8px; }
+.ai-process-title {
+    font-size: 13px;
+    font-weight: 600;
+    color: #0f172a;
+    margin-bottom: 4px;
+}
+.ai-process-desc { font-size: 12px; color: #64748b; }
+
+/* ── Settings: Data Status ── */
+.data-status-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 13px;
+    padding: 8px 0;
+    border-bottom: 0.5px solid #f1f5f9;
+}
+.data-status-row:last-child { border-bottom: none; }
+.data-status-label { color: #64748b; }
+.data-status-value { font-weight: 600; color: #0f172a; }
+.data-status-value.good { color: #008b5b; }

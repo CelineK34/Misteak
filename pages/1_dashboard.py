@@ -1,149 +1,151 @@
+"""
+pages/1_dashboard.py — Dashboard overview page
+"""
 import streamlit as st
 import plotly.graph_objects as go
 import plotly.express as px
+import sys, os
+sys.path.insert(0, os.path.dirname(os.path.dirname(__file__)))
 import dummy_data
 
-with open('dashboard.css') as f:
-    st.markdown(f'<style>{f.read()}</style>', unsafe_allow_html=True)
+# ── CSS ───────────────────────────────────────────────────────────────────────
+for css_file in ("CSS_File/style.css", "CSS_File/dashboard.css"):
+    with open(css_file) as f:
+        st.markdown(f"<style>{f.read()}</style>", unsafe_allow_html=True)
 
-st.markdown("<h1 style='font-size:28px;font-weight:700;color:#0f172a;margin-bottom:4px;'>Dashboard</h1>",
-            unsafe_allow_html=True)
-st.markdown("<p style='color:#64748b;margin-top:-12px'>Your F&B business performance at a glance</p>",
-            unsafe_allow_html=True)
+# ── Page Header ───────────────────────────────────────────────────────────────
+st.markdown("""
+<h1 class='page-header-title'>Dashboard</h1>
+<p class='page-header-sub'>Your F&amp;B business performance at a glance</p>
+""", unsafe_allow_html=True)
 
+# ── Alert Banner ──────────────────────────────────────────────────────────────
 st.markdown("""
 <div class="alert-box">
-    <span class="alert-text">⚠️ 2 AI alerts need your attention</span>
-</div>""", unsafe_allow_html=True)
+    <span class="alert-text">
+        ⚠️ <strong>2 critical AI alerts</strong> need your attention today
+    </span>
+</div>
+""", unsafe_allow_html=True)
 
-# ── KPI Cards ────────────────────────────────────────────────
+# ── KPI Cards ─────────────────────────────────────────────────────────────────
 data = dummy_data.kpi_data
 
-def render_card(title, value, trend, is_positive):
-    icon = "↑" if is_positive else "↓"
-    cls  = "trend-up" if is_positive else "trend-down"
-    sign = "+" if is_positive else ""
+def render_kpi_card(title, value, trend, is_positive):
+    icon  = "↑" if is_positive else "↓"
+    cls   = "trend-up" if is_positive else "trend-down"
+    sign  = "+" if is_positive else ""
     return f"""
     <div class="metric-card">
         <div class="metric-title">{title}</div>
         <div class="metric-value">{value}</div>
-        <div><span class="trend-badge {cls}">{icon} {sign}{trend}% vs last week</span></div>
+        <span class="trend-badge {cls}">{icon} {sign}{trend}% vs last week</span>
     </div>"""
 
-cards = (
-    render_card("Total Revenue", data["Total Revenue"]["value"], data["Total Revenue"]["trend"], data["Total Revenue"]["is_positive"]) +
-    render_card("Total Profit",  data["Total Profit"]["value"],  data["Total Profit"]["trend"],  data["Total Profit"]["is_positive"]) +
-    render_card("Total Orders",  data["Total Orders"]["value"],  data["Total Orders"]["trend"],  data["Total Orders"]["is_positive"]) +
-    render_card("Avg Margin",    data["Avg Margin"]["value"],    data["Avg Margin"]["trend"],    data["Avg Margin"]["is_positive"])
+cards_html = "".join(
+    render_kpi_card(k, v["value"], v["trend"], v["is_positive"])
+    for k, v in data.items()
 )
-st.markdown(f'<div class="kpi-card-container">{cards}</div>', unsafe_allow_html=True)
+st.markdown(f'<div class="kpi-card-container">{cards_html}</div>', unsafe_allow_html=True)
 
-# ── Charts ───────────────────────────────────────────────────
+# ── Charts Row ────────────────────────────────────────────────────────────────
 df = dummy_data.trend_df
-c1, c2 = st.columns([2, 1])
+col_trend, col_bar = st.columns([1.7, 1])
 
-with c1:
+with col_trend:
     fig = go.Figure()
     fig.add_trace(go.Scatter(
-        x=df["Date"], y=df["Revenue"], name="Revenue",
+        x=df["Date"], y=df["Revenue"], name="Revenue (RM)",
         mode="lines",
         line=dict(color="#008b5b", width=2.5, shape="spline", smoothing=1.3),
-        fill="tozeroy", fillcolor="rgba(0,139,91,0.10)"
+        fill="tozeroy", fillcolor="rgba(0,139,91,0.08)",
     ))
     fig.add_trace(go.Scatter(
-        x=df["Date"], y=df["Profit"], name="Profit",
+        x=df["Date"], y=df["Profit"], name="Profit (RM)",
         mode="lines",
         line=dict(color="#5ecfa0", width=2, shape="spline", smoothing=1.3),
-        fill="tozeroy", fillcolor="rgba(94,207,160,0.10)"
+        fill="tozeroy", fillcolor="rgba(94,207,160,0.08)",
     ))
     fig.update_layout(
         plot_bgcolor="white", paper_bgcolor="white",
         font=dict(color="#1e293b", size=12),
-        xaxis=dict(gridcolor="#f1f5f9", linecolor="#e2e8f0", showgrid=True,
-                   tickformat="%b %d\n%Y"),
-        yaxis=dict(gridcolor="#f1f5f9", linecolor="#e2e8f0", showgrid=True),
+        xaxis=dict(gridcolor="#f1f5f9", linecolor="#e2e8f0", tickformat="%b %d"),
+        yaxis=dict(gridcolor="#f1f5f9", linecolor="#e2e8f0"),
         legend=dict(orientation="h", yanchor="bottom", y=1.02,
                     xanchor="right", x=1, bgcolor="rgba(0,0,0,0)"),
         margin=dict(l=10, r=10, t=30, b=10),
-        hovermode="x unified"
+        hovermode="x unified",
     )
     st.markdown("""
-    <div style="background:white;border-radius:16px 16px 0 0;padding:20px 20px 0 20px;
-                border:0.5px solid #e2e8f0;border-bottom:none;">
-        <div style="font-weight:700;font-size:16px;color:#0f172a;">
-            Revenue &amp; Profit Trend</div>
+    <div class="chart-header">
+        <div class="chart-header-title">Revenue &amp; Profit Trend</div>
+        <div class="chart-header-sub">Weekly rolling — last 17 weeks</div>
     </div>""", unsafe_allow_html=True)
     st.plotly_chart(fig, use_container_width=True)
 
-with c2:
+with col_bar:
     fig2 = px.bar(
         dummy_data.item_profit_df, x="Profit", y="Item",
-        orientation='h', color_discrete_sequence=["#008b5b"],
+        orientation="h", color_discrete_sequence=["#008b5b"],
     )
     fig2.update_layout(
         plot_bgcolor="white", paper_bgcolor="white",
         font=dict(color="#1e293b", size=12),
         showlegend=False,
-        xaxis=dict(gridcolor="#f1f5f9", linecolor="#e2e8f0", title="Profit"),
+        xaxis=dict(gridcolor="#f1f5f9", linecolor="#e2e8f0",
+                   title="Profit (RM)", tickprefix="RM "),
         yaxis=dict(gridcolor="#f1f5f9", linecolor="#e2e8f0", title=""),
         margin=dict(l=10, r=10, t=30, b=10),
     )
     st.markdown("""
-    <div style="background:white;border-radius:16px 16px 0 0;padding:20px 20px 0 20px;
-                border:0.5px solid #e2e8f0;border-bottom:none;">
-        <div style="font-weight:700;font-size:16px;color:#0f172a;">
-            Profit by Item</div>
+    <div class="chart-header">
+        <div class="chart-header-title">Profit by Item</div>
+        <div class="chart-header-sub">This month</div>
     </div>""", unsafe_allow_html=True)
     st.plotly_chart(fig2, use_container_width=True)
 
-# ── Performer Cards ───────────────────────────────────────────
-def render_row(rank, name, margin, revenue, is_top):
-    badge_bg  = "#d0f5e8" if is_top else ["#fee2e2","#fef3c7","#fef3c7"][min(rank-1,2)]
-    badge_txt = "#005c3e" if is_top else ["#991b1b","#92400e","#92400e"][min(rank-1,2)]
-    val_color = "#008b5b" if is_top else "#64748b"
+# ── Performer Cards ───────────────────────────────────────────────────────────
+def render_performer_row(rank, name, margin, revenue, is_top):
+    rank_cls    = "rank-top" if is_top else "rank-attn"
+    revenue_cls = "revenue-top" if is_top else "revenue-attn"
     return f"""
-    <div style="display:flex;align-items:center;justify-content:space-between;
-                background:#f8fafc;border-radius:10px;padding:14px 16px;margin-bottom:10px;">
-        <div style="display:flex;align-items:center;gap:14px;">
-            <div style="width:28px;height:28px;border-radius:50%;background:{badge_bg};
-                        color:{badge_txt};display:flex;align-items:center;justify-content:center;
-                        font-size:13px;font-weight:600;">{rank}</div>
+    <div class="performer-row">
+        <div class="performer-inner">
+            <div class="performer-rank {rank_cls}">{rank}</div>
             <div>
-                <div style="font-weight:600;color:#0f172a;font-size:14px;">{name}</div>
-                <div style="color:#64748b;font-size:12px;">{margin} margin</div>
+                <div class="performer-name">{name}</div>
+                <div class="performer-meta">{margin}</div>
             </div>
         </div>
-        <div style="font-weight:700;color:{val_color};font-size:15px;">{revenue}</div>
+        <div class="performer-revenue {revenue_cls}">{revenue}</div>
     </div>"""
 
-p1, p2 = st.columns(2)
+col_top, col_attn = st.columns(2)
 
-with p1:
+with col_top:
     rows = "".join(
-        render_row(i+1, r["Item"], r["Margin"], r["Revenue"], True)
+        render_performer_row(i + 1, r["Item"], r["Margin"], r["Revenue"], True)
         for i, r in dummy_data.top_performers_df.iterrows()
     )
     st.markdown(f"""
-    <div style="background:white;border-radius:14px;padding:20px;
-                border:0.5px solid #e2e8f0;margin-top:16px;">
-        <div style="font-weight:700;font-size:16px;color:#0f172a;margin-bottom:14px;">
-            ⚡ Top Performers</div>
+    <div class="performer-card">
+        <div class="performer-card-title">⚡ Top Performers</div>
         {rows}
     </div>""", unsafe_allow_html=True)
 
-with p2:
+with col_attn:
     rows = "".join(
-        render_row(i+1, r["Item"], r["Margin"], r["Revenue"], False)
+        render_performer_row(i + 1, r["Item"], r["Margin"], r["Revenue"], False)
         for i, r in dummy_data.needs_attention_df.iterrows()
     )
     st.markdown(f"""
-    <div style="background:white;border-radius:14px;padding:20px;
-                border:0.5px solid #e2e8f0;margin-top:16px;">
-        <div style="font-weight:700;font-size:16px;color:#0f172a;margin-bottom:14px;">
-            ⚠️ Needs Attention</div>
+    <div class="performer-card">
+        <div class="performer-card-title">⚠️ Needs Attention</div>
         {rows}
     </div>""", unsafe_allow_html=True)
 
-st.markdown("""
-<div class="dashboard-footer">AI-Powered · Decisions based on your real sales data</div>
-""", unsafe_allow_html=True)
+# ── Footer ────────────────────────────────────────────────────────────────────
+st.markdown(
+    '<div class="page-footer">AI-Powered · FoodAI · Decisions based on your real sales data</div>',
+    unsafe_allow_html=True,
+)
