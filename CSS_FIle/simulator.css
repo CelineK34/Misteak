@@ -6,8 +6,7 @@
     display: none !important;
     visibility: hidden !important;
 }
-[data-baseweb="tooltip"],
-[data-baseweb="popover"] {
+[data-baseweb="tooltip"] {
     display: none !important;
     visibility: hidden !important;
 }

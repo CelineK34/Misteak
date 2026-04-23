@@ -36,7 +36,7 @@ with col_controls:
             "Select Item</div>",
             unsafe_allow_html=True,
         )
-        selected = st.selectbox("Item", list(items.keys()), label_visibility="collapsed")
+        selected = st.selectbox("", list(items.keys()), label_visibility="collapsed")
         item = items[selected]
 
         # Price slider
