@@ -50,14 +50,12 @@ with col_left:
 
     st.markdown("<div style='height:4px;'></div>", unsafe_allow_html=True)
 
-    # Manual Entry
-    st.markdown("""
-    <div class="settings-card" style="margin-top:0;">
-        <div class="settings-card-title">Manual Entry</div>
-    </div>
-    """, unsafe_allow_html=True)
-
     with st.form("manual_entry", clear_on_submit=True):
+        st.markdown(
+            "<div style='font-weight:700;font-size:15px;color:#0f172a;margin-bottom:16px;'>"
+            "Manual Entry</div>",
+            unsafe_allow_html=True,
+        )
         r1c1, r1c2 = st.columns(2)
         with r1c1:
             product_name = st.text_input("Product name", placeholder="e.g. Nasi Lemak")
@@ -81,6 +79,7 @@ with col_left:
         )
         if submitted and product_name:
             st.success(f"✓ Entry for **{product_name}** saved — AI model updated.")
+
 
 # ── Right Column: AI Process + Data Status ────────────────────────────────────
 with col_right:

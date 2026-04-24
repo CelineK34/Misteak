@@ -37,7 +37,7 @@
     background: white;
 }
 
-/* ── Settings: Manual Entry Form ── */
+/* ── Settings Card ── */
 .settings-card {
     background: white;
     border-radius: 14px;
@@ -52,7 +52,7 @@
     margin-bottom: 16px;
 }
 
-/* ── Settings: AI Process Steps ── */
+/* ── AI Process Steps ── */
 .ai-process-grid {
     display: grid;
     grid-template-columns: 1fr 1fr;
@@ -73,7 +73,7 @@
 }
 .ai-process-desc { font-size: 12px; color: #64748b; }
 
-/* ── Settings: Data Status ── */
+/* ── Data Status ── */
 .data-status-row {
     display: flex;
     justify-content: space-between;
@@ -86,3 +86,37 @@
 .data-status-label { color: #64748b; }
 .data-status-value { font-weight: 600; color: #0f172a; }
 .data-status-value.good { color: #008b5b; }
+
+/* ── Form styled as card ── */
+[data-testid="stForm"] {
+    background: white !important;
+    border: 0.5px solid #e2e8f0 !important;
+    border-radius: 14px !important;
+    padding: 24px !important;
+    margin-bottom: 16px !important;
+}
+
+/* ── Input fields ── */
+[data-testid="stTextInput"] input,
+[data-testid="stNumberInput"] input,
+[data-testid="stDateInput"] input {
+    background-color: #f8fafc !important;
+    border-radius: 8px !important;
+}
+
+/* ── Hide Press Enter to submit ── */
+[data-testid="InputInstructions"] {
+    display: none !important;
+}
+
+/* ── Form submit button ── */
+[data-testid="stFormSubmitButton"] button {
+    background-color: #008b5b !important;
+    border-color: #008b5b !important;
+    color: white !important;
+    border-radius: 8px !important;
+    font-weight: 600 !important;
+}
+[data-testid="stFormSubmitButton"] button:hover {
+    background-color: #006e48 !important;
+}

@@ -2,7 +2,7 @@
 base = "light"
 primaryColor = "#008b5b"
 backgroundColor = "#f8fafc"
-secondaryBackgroundColor = "#f1f5f9"
+secondaryBackgroundColor = "#ffffff"
 textColor = "#0f172a"
 
 [server]
