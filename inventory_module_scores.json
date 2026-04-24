@@ -1,0 +1,6 @@
+{
+  "supply_score": 0.6062,
+  "supply_label": "moderate",
+  "supply_driver": "thin safety buffer, high waste, long lead times",
+  "glm_summary": "The moderate supply score of 0.6062 is primarily suppressed by weak stability (0.543) and high risk (0.565) sub-scores, driven by a dangerously thin average safety buffer of 0.35 and lengthy 3.2-day lead times. Furthermore, an elevated average waste of 3.17% restricts operational efficiency (0.615), while a near-certain stockout risk of 0.97\u2014compounded by high demand occurring on 25.3% of days\u2014underscores the system's vulnerability to demand spikes."
+}
