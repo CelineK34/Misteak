@@ -1,0 +1,35 @@
+{
+  "customer": {
+    "score": -0.021766413911189855,
+    "label": "neutral",
+    "metrics": {
+      "followers": 35785.14487989961,
+      "reviews": 523.010396749522
+    },
+    "derived": {
+      "reviews_per_follower": 0.01461529353883642,
+      "engagement_level": "low",
+      "engagement_interpretation": "weak conversion of audience into engagement"
+    },
+    "insight": {
+      "strength": "high reach (~35,785 followers)",
+      "weakness": "low engagement (~523 reviews, weak conversion)"
+    }
+  },
+  "business": {
+    "score": -0.0009720248887217823,
+    "label": "neutral",
+    "metrics": {
+      "rating": 4.008257648183557,
+      "ambience": 5.521283460803059
+    },
+    "derived": {
+      "experience_level": "weak",
+      "experience_interpretation": "experience quality lags behind food quality"
+    },
+    "insight": {
+      "strength": "strong food quality (rating 4.01)",
+      "weakness": "weak ambience (5.52/10) limits experience"
+    }
+  }
+}

@@ -1,16 +1,21 @@
 """
 pages/4_simulator.py — "What if?" scenario simulator
+Data-connected: derives items, prices, costs, and elasticity from real sales data.
 """
 import streamlit as st
 import plotly.graph_objects as go
-import sys, os
-sys.path.insert(0, os.path.dirname(os.path.dirname(__file__)))
-import dummy_data
+import pandas as pd
+import numpy as np
+import os
+
+BASE = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 # ── CSS ───────────────────────────────────────────────────────────────────────
 for css_file in ("CSS_File/style.css", "CSS_File/simulator.css"):
-    with open(css_file) as f:
-        st.markdown(f"<style>{f.read()}</style>", unsafe_allow_html=True)
+    css_path = os.path.join(BASE, css_file)
+    if os.path.exists(css_path):
+        with open(css_path, encoding="utf-8") as f:
+            st.markdown(f"<style>{f.read()}</style>", unsafe_allow_html=True)
 
 # ── Page Header ───────────────────────────────────────────────────────────────
 st.markdown("""
@@ -18,8 +23,67 @@ st.markdown("""
 <p class='page-header-sub'>"What if…?" — Predict profit &amp; demand impact before making changes</p>
 """, unsafe_allow_html=True)
 
+# ── LOAD DATA ─────────────────────────────────────────────────────────────────
+@st.cache_data
+def load_sales():
+    path = os.path.join(BASE, "preprocessed_restaurant_sales_data.csv")
+    return pd.read_csv(path) if os.path.exists(path) else pd.DataFrame()
+
+sales_df = load_sales()
+
+# ── COMPUTE ITEM STATS + ELASTICITY ──────────────────────────────────────────
+@st.cache_data
+def compute_simulator_items(df):
+    """Build simulator item dict with real elasticity from sales data."""
+    if df.empty or "menu_item_name" not in df.columns:
+        return {}
+
+    df = df[df["quantity_sold"] > 0].copy()
+    items = {}
+
+    for name in df["menu_item_name"].unique():
+        sub = df[df["menu_item_name"] == name]
+        if len(sub) < 20:
+            continue
+
+        avg_price = sub["actual_selling_price"].mean()
+        avg_cost = sub["typical_ingredient_cost"].mean()
+        avg_qty = sub["quantity_sold"].mean()
+
+        # Log-log regression: elasticity = cov(log_p, log_q) / var(log_p)
+        log_p = np.log(sub["actual_selling_price"])
+        log_q = np.log(sub["quantity_sold"])
+        var_p = log_p.var()
+        if var_p > 1e-6:
+            elasticity = log_p.cov(log_q) / var_p
+        else:
+            elasticity = -1.0
+
+        # Clamp elasticity to reasonable range (-3.0 to -0.1)
+        elasticity = max(-3.0, min(-0.1, elasticity))
+
+        items[name] = {
+            "price": round(avg_price, 2),
+            "cost": round(avg_cost, 2),
+            "qty": int(round(avg_qty)),
+            "elasticity": round(elasticity, 2),
+            "margin": round(sub["profit_margin"].mean(), 2),
+            "market_price": round(sub["observed_market_price"].mean(), 2),
+        }
+
+    # Sort by revenue (price * qty) so top items appear first
+    sorted_items = dict(
+        sorted(items.items(), key=lambda x: x[1]["price"] * x[1]["qty"], reverse=True)
+    )
+    return sorted_items
+
+sim_items = compute_simulator_items(sales_df)
+
+if not sim_items:
+    st.warning("No sales data available. Upload data in Settings first.")
+    st.stop()
+
 # ── Layout ────────────────────────────────────────────────────────────────────
-items = dummy_data.simulator_items
 col_controls, col_chart = st.columns([1, 1.5])
 
 with col_controls:
@@ -36,8 +100,18 @@ with col_controls:
             "Select Item</div>",
             unsafe_allow_html=True,
         )
-        selected = st.selectbox("", list(items.keys()), label_visibility="collapsed")
-        item = items[selected]
+        selected = st.selectbox("", list(sim_items.keys()), label_visibility="collapsed")
+        item = sim_items[selected]
+
+        # Show current item stats
+        st.markdown(f"""
+        <div style='font-size:12px;color:#64748b;margin-bottom:12px;line-height:1.6;'>
+            Price: RM {item['price']:.2f} &nbsp;|&nbsp; Cost: RM {item['cost']:.2f} &nbsp;|&nbsp;
+            Margin: {item['margin']:.0%}<br>
+            Market Avg: RM {item['market_price']:.2f} &nbsp;|&nbsp;
+            Elasticity: {item['elasticity']:.2f}
+        </div>
+        """, unsafe_allow_html=True)
 
         # Price slider
         st.markdown(

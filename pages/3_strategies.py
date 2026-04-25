@@ -1,15 +1,46 @@
 """
 pages/3_strategies.py — AI-generated strategy options with trade-off comparison
+Data-connected: derives strategies from sales, inventory, and GLM analysis.
 """
 import streamlit as st
-import sys, os
-sys.path.insert(0, os.path.dirname(os.path.dirname(__file__)))
-import dummy_data
+import pandas as pd
+import json
+import os
+import re
+
+BASE = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 # ── CSS ───────────────────────────────────────────────────────────────────────
-for css_file in ("CSS_File/style.css", "CSS_File/strategies.css"):
-    with open(css_file) as f:
-        st.markdown(f"<style>{f.read()}</style>", unsafe_allow_html=True)
+for css_file in ("CSS_FIle/style.css", "CSS_FIle/strategies.css"):
+    css_path = os.path.join(BASE, css_file)
+    if os.path.exists(css_path):
+        with open(css_path, encoding="utf-8") as f:
+            st.markdown(f"<style>{f.read()}</style>", unsafe_allow_html=True)
+
+# ── LOAD DATA ─────────────────────────────────────────────────────────────────
+@st.cache_data
+def load_sales():
+    path = os.path.join(BASE, "preprocessed_restaurant_sales_data.csv")
+    return pd.read_csv(path) if os.path.exists(path) else pd.DataFrame()
+
+@st.cache_data
+def load_inventory():
+    path = os.path.join(BASE, "preprocessed_inventory_data.csv")
+    return pd.read_csv(path) if os.path.exists(path) else pd.DataFrame()
+
+def load_json(filename):
+    path = os.path.join(BASE, filename)
+    if os.path.exists(path):
+        with open(path, encoding="utf-8") as f:
+            return json.load(f)
+    return {}
+
+sales_df = load_sales()
+inventory_df = load_inventory()
+glm_payload = load_json("glm_payload.json")
+glm_result = load_json("glm_result.json")
+pricing_output = load_json("pricing_score_output.json")
+inventory_scores = load_json("inventory_module_scores.json")
 
 # ── Page Header ───────────────────────────────────────────────────────────────
 st.markdown("""
@@ -19,18 +50,294 @@ st.markdown("""
 
 # ── Helper: Risk Badge Colours ────────────────────────────────────────────────
 def risk_badge_colors(risk: str) -> tuple[str, str]:
-    """Return (background, text) colours for a risk label."""
     if "Medium" in risk:
         return "#fef3c7", "#92400e"
     if "High" in risk:
         return "#fee2e2", "#991b1b"
-    return "#d0f5e8", "#005c3e"   # Low
+    return "#d0f5e8", "#005c3e"
+
+# ── GLM INSIGHT EXTRACTOR ─────────────────────────────────────────────────────
+def extract_glm_section(report, heading):
+    """Extract a section from the GLM markdown report by heading."""
+    if not report:
+        return ""
+    pattern = rf"##\s*\d*\.?\s*{re.escape(heading)}.*?\n(.*?)(?=\n##|\Z)"
+    match = re.search(pattern, report, re.DOTALL | re.IGNORECASE)
+    if match:
+        text = match.group(1).strip()
+        text = text.replace("**", "")
+        # Take first 2 sentences
+        sentences = re.split(r'(?<=[.!?])\s+', text)
+        return " ".join(sentences[:2])
+    return ""
+
+glm_report = glm_result.get("report", "")
+pricing_summary = pricing_output.get("glm_summary", "")
+supply_summary = inventory_scores.get("glm_summary", "")
+supply_driver = glm_payload.get("supply", {}).get("driver", "")
+pricing_driver = glm_payload.get("pricing", {}).get("driver", "")
+customer_insight = glm_payload.get("customer", {}).get("insight", {})
+customer_weakness = customer_insight.get("weakness", "")
+customer_strength = customer_insight.get("strength", "")
+business_insight = glm_payload.get("business", {}).get("insight", {})
+business_weakness = business_insight.get("weakness", "")
+
+# ── STRATEGY ENGINE ───────────────────────────────────────────────────────────
+def generate_strategies(sales_df, inventory_df, glm_payload, glm_report,
+                        pricing_summary, supply_summary):
+    """Derive strategy cards using real data + GLM insights for descriptions."""
+    strategies = []
+    pricing_score = glm_payload.get("pricing", {}).get("score", 0.5)
+    supply_score = glm_payload.get("supply", {}).get("score", 0.5)
+    customer_score = glm_payload.get("customer", {}).get("score", 0)
+
+    if sales_df.empty:
+        return strategies
+
+    item_stats = sales_df.groupby("menu_item_name").agg(
+        total_revenue=("revenue", "sum"),
+        avg_margin=("profit_margin", "mean"),
+        total_qty=("quantity_sold", "sum"),
+        avg_price=("actual_selling_price", "mean"),
+        avg_cost=("typical_ingredient_cost", "mean"),
+        avg_market_price=("observed_market_price", "mean"),
+    ).reset_index()
+
+    # ── 1. Bundle Strategy (Top 2 items) ──────────────────────────────────
+    top2 = item_stats.nlargest(2, "total_revenue")
+    if len(top2) >= 2:
+        item_a, item_b = top2.iloc[0], top2.iloc[1]
+        bundle_price = (item_a["avg_price"] + item_b["avg_price"]) * 0.9
+        combined_margin = (item_a["avg_margin"] + item_b["avg_margin"]) / 2
+        profit_uplift = round(combined_margin * 22, 1)
+        confidence = min(95, int(70 + pricing_score * 25))
+        risk = "High Risk" if pricing_score < 0.4 else "Medium Risk"
+
+        # GLM insight for description
+        pricing_section = extract_glm_section(glm_report, "Pricing")
+        if pricing_section:
+            desc = (
+                f"Create a combo at RM {bundle_price:.2f} (vs RM {item_a['avg_price'] + item_b['avg_price']:.2f} separate). "
+                f"Both are top performers with combined margin of {combined_margin:.0%}. "
+                f"AI insight: {pricing_section}"
+            )
+        elif pricing_summary:
+            desc = (
+                f"Create a combo at RM {bundle_price:.2f} (vs RM {item_a['avg_price'] + item_b['avg_price']:.2f} separate). "
+                f"Both are top performers with combined margin of {combined_margin:.0%}. "
+                f"AI analysis: {pricing_summary}"
+            )
+        else:
+            desc = (
+                f"Create a combo at RM {bundle_price:.2f} (vs RM {item_a['avg_price'] + item_b['avg_price']:.2f} separate). "
+                f"Both are top performers with combined margin of {combined_margin:.0%}. "
+                f"Bundling increases average order value and drives volume for two proven items."
+            )
+
+        # GLM-driven action steps
+        actions = []
+        rec_section = extract_glm_section(glm_report, "Recommendation")
+        if rec_section:
+            # Extract actionable items from GLM recommendations
+            for line in rec_section.split("\n"):
+                clean = line.strip().lstrip("-*0123456789. ").strip()
+                if clean and len(clean) > 10:
+                    actions.append(clean)
+        if len(actions) < 3:
+            actions = [
+                "Create combo menu signage",
+                "Train staff on bundle offer",
+                "Track combo vs individual sales",
+            ]
+
+        strategies.append({
+            "title": f"Bundle {item_a['menu_item_name']} + {item_b['menu_item_name']}",
+            "risk": risk,
+            "profit_impact": f"+{profit_uplift:.0f}%",
+            "desc": desc,
+            "confidence": confidence,
+            "actions": actions[:3],
+        })
+
+    # ── 2. Price Optimization for Weak-Margin Items ───────────────────────
+    if pricing_score < 0.6:
+        weak_margin = item_stats.nsmallest(1, "avg_margin")
+        if not weak_margin.empty:
+            w = weak_margin.iloc[0]
+            price_gap = w["avg_market_price"] - w["avg_price"]
+            if price_gap > 0:
+                new_price = w["avg_price"] + price_gap * 0.5
+                profit_uplift = round((1 - w["avg_margin"]) * 15, 1)
+
+                # Use GLM pricing insight
+                if pricing_summary:
+                    desc = (
+                        f"{w['menu_item_name']} is priced RM {w['avg_price']:.2f} but market average is RM {w['avg_market_price']:.2f}. "
+                        f"Raising to RM {new_price:.2f} would boost margins. "
+                        f"AI analysis: {pricing_summary}"
+                    )
+                else:
+                    desc = (
+                        f"{w['menu_item_name']} is priced RM {w['avg_price']:.2f} but market average is RM {w['avg_market_price']:.2f}. "
+                        f"A partial price correction to RM {new_price:.2f} would boost margins with minimal demand loss, "
+                        f"since your current margin is only {w['avg_margin']:.0%}."
+                    )
+
+                strategies.append({
+                    "title": f"Raise {w['menu_item_name']} price to RM {new_price:.2f}",
+                    "risk": "Low Risk",
+                    "profit_impact": f"+{profit_uplift:.0f}%",
+                    "desc": desc,
+                    "confidence": min(90, int(65 + pricing_score * 30)),
+                    "actions": [
+                        "Gradual price increase over 2 weeks",
+                        "Monitor customer feedback",
+                        "Compare revenue before/after",
+                    ],
+                })
+            else:
+                if pricing_summary:
+                    desc = (
+                        f"{w['menu_item_name']} has a margin of only {w['avg_margin']:.0%}. "
+                        f"Since pricing is already at market level, focus on reducing ingredient cost. "
+                        f"AI analysis: {pricing_summary}"
+                    )
+                else:
+                    desc = (
+                        f"{w['menu_item_name']} has a margin of only {w['avg_margin']:.0%}. "
+                        f"Since pricing is already at market level, focus on reducing ingredient cost "
+                        f"or adjusting portion size to improve profitability."
+                    )
+
+                strategies.append({
+                    "title": f"Optimize {w['menu_item_name']} cost structure",
+                    "risk": "Medium Risk",
+                    "profit_impact": "+12%",
+                    "desc": desc,
+                    "confidence": min(85, int(60 + pricing_score * 30)),
+                    "actions": [
+                        "Review supplier contracts",
+                        "Optimize portion sizes",
+                        "Track cost per serving",
+                    ],
+                })
+
+    # ── 3. Waste Reduction Strategy (from inventory) ──────────────────────
+    if not inventory_df.empty and "waste_percentage" in inventory_df.columns:
+        avg_waste = inventory_df["waste_percentage"].mean()
+        high_waste = inventory_df[inventory_df["waste_percentage"] > avg_waste]
+        if not high_waste.empty and avg_waste > 2.0:
+            worst = high_waste.nlargest(1, "waste_percentage").iloc[0]
+            waste_pct = worst["waste_percentage"]
+            daily_save = worst.get("price_per_unit", 10) * worst.get("daily_usage", 1) * waste_pct / 100 * 0.5
+
+            # Use GLM supply insight
+            if supply_summary:
+                desc = (
+                    f"{worst['item_name']} has {waste_pct:.1f}% waste — above your average of {avg_waste:.1f}%. "
+                    f"Reducing waste by half would save RM {daily_save:,.0f}/day. "
+                    f"AI analysis: {supply_summary}"
+                )
+            else:
+                desc = (
+                    f"{worst['item_name']} has {waste_pct:.1f}% waste — above your average of {avg_waste:.1f}%. "
+                    f"Reducing waste by half would save RM {daily_save:,.0f}/day. "
+                    f"Adjust prep quantities and monitor daily usage patterns."
+                )
+
+            strategies.append({
+                "title": f"Reduce {worst['item_name']} waste ({waste_pct:.1f}%)",
+                "risk": "Low Risk",
+                "profit_impact": f"+{round(waste_pct * 2)}%",
+                "desc": desc,
+                "confidence": min(90, int(70 + supply_score * 20)),
+                "actions": [
+                    "Reduce prep quantity by 15-20%",
+                    "Track daily waste levels",
+                    "Adjust reorder based on demand",
+                ],
+            })
+
+    # ── 4. Customer Engagement Strategy ───────────────────────────────────
+    top_item = item_stats.nlargest(1, "total_revenue")
+    if not top_item.empty and customer_score < 0.1:
+        t = top_item.iloc[0]
+
+        # Use GLM customer insight
+        if customer_weakness:
+            desc = (
+                f"{t['menu_item_name']} is your top seller (RM {t['total_revenue']:,.0f} revenue, "
+                f"{t['avg_margin']:.0%} margin) but customer engagement is low. "
+                f"AI finding: {customer_weakness}. "
+                f"Leverage social media to turn followers into active reviewers."
+            )
+        else:
+            desc = (
+                f"{t['menu_item_name']} is your top seller (RM {t['total_revenue']:,.0f} revenue, "
+                f"{t['avg_margin']:.0%} margin) but customer engagement is low. "
+                f"Leverage social media to drive reviews and word-of-mouth."
+            )
+
+        strategies.append({
+            "title": f"Promote {t['menu_item_name']} on social media",
+            "risk": "Low Risk",
+            "profit_impact": f"+{round(t['avg_margin'] * 10)}%",
+            "desc": desc,
+            "confidence": min(85, int(60 + max(0, customer_score + 1) * 20)),
+            "actions": [
+                "Create social media posts featuring this item",
+                "Run review incentive campaign",
+                "Track engagement and foot traffic",
+            ],
+        })
+
+    # ── 5. Business Experience Strategy (if ambience is weak) ─────────────
+    business_score = glm_payload.get("business", {}).get("score", 0)
+    if business_score < 0.1 and business_weakness:
+        strategies.append({
+            "title": "Improve restaurant atmosphere",
+            "risk": "Medium Risk",
+            "profit_impact": "+20%",
+            "desc": (
+                f"AI finding: {business_weakness}. "
+                f"Improving the dining atmosphere lets you charge more and keeps customers coming back. "
+                f"Even small changes like better lighting, music, or table setup can make a big difference."
+            ),
+            "confidence": min(80, int(65 + max(0, business_score + 1) * 15)),
+            "actions": [
+                "Refresh lighting and decor",
+                "Add background music",
+                "Collect customer feedback on atmosphere",
+            ],
+        })
+
+    # ── Fallback if no strategies generated ───────────────────────────────
+    if not strategies:
+        strategies.append({
+            "title": "Analyze business performance",
+            "risk": "Low Risk",
+            "profit_impact": "+10%",
+            "desc": "Run the AI analysis in Settings to generate data-driven strategies.",
+            "confidence": 60,
+            "actions": [
+                "Go to Settings page",
+                "Run AI analysis",
+                "Return here for strategies",
+            ],
+        })
+
+    return strategies
+
+strategies_data = generate_strategies(
+    sales_df, inventory_df, glm_payload, glm_report,
+    pricing_summary, supply_summary
+)
 
 # ── Comparison Table ──────────────────────────────────────────────────────────
 table_rows = ""
-for s in dummy_data.strategies_data:
+for s in strategies_data:
     bg, fg = risk_badge_colors(s["risk"])
-    label  = s["risk"].replace(" Risk", "")
+    label = s["risk"].replace(" Risk", "")
     table_rows += f"""
     <tr>
         <td>{s['title']}</td>
@@ -63,7 +370,7 @@ st.markdown(f"""
 # ── Strategy Cards ────────────────────────────────────────────────────────────
 col_left, col_right = st.columns(2)
 
-for i, s in enumerate(dummy_data.strategies_data):
+for i, s in enumerate(strategies_data):
     bg, fg = risk_badge_colors(s["risk"])
 
     actions_html = "".join(
@@ -119,4 +426,4 @@ st.markdown("<div style='height:24px;'></div>", unsafe_allow_html=True)
 _, btn_col, _ = st.columns([1.5, 1, 1.5])
 with btn_col:
     if st.button("View Best Recommendation →", use_container_width=True, type="primary"):
-        st.switch_page("pages/5_decision.py")
+        st.switch_page("pages/5_Decision.py")
