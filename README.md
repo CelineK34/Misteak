@@ -61,11 +61,21 @@ The system auto-detects and classifies each file.
 ---
 
 ## 🔄 Data Flow
+
 ZIP Upload
-│
-├── Sales Data → Preprocessing → Dashboard / Alerts / Strategies / Simulator / Decision
-├── Inventory Data → Preprocessing → Alerts / Strategies / Decision
-└── Customer Data → JSON Generation → GLM Engine → AI Insights
+
+- Sales Data  
+  → Preprocessing  
+  → Dashboard / Alerts / Strategies / Simulator / Decision  
+
+- Inventory Data  
+  → Preprocessing  
+  → Alerts / Strategies / Decision  
+
+- Customer Data  
+  → JSON Generation  
+  → GLM Engine  
+  → AI Insights  
 
 ---
 
@@ -75,13 +85,17 @@ ZIP Upload
 ```bash
 git clone https://github.com/your-username/your-repo.git
 cd your-repo
-
-2. Run Application
+```
+### 2. Run Application
+```bash
 streamlit run app.py
+```
 
-🛠️ Tech Stack
-Frontend: Streamlit
-Backend: Python
-Data Processing: Pandas, NumPy
-Machine Learning: Scikit-learn, GLM
-Visualization: Matplotlib / Plotly
+---
+
+## 🛠️ Tech Stack
+- Frontend: Streamlit
+- Backend: Python
+- Data Processing: Pandas, NumPy
+- Machine Learning: Scikit-learn, GLM
+- Visualization: Matplotlib / Plotly
