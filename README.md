@@ -3,6 +3,9 @@
 An end-to-end data analytics and AI decision-making platform built with **Streamlit**.  
 This system transforms raw restaurant data into actionable insights, alerts, and strategies using a full preprocessing + GLM-based pipeline.
 
+# 📹 Pitching Video with Demonstration
+https://cloudmails-my.sharepoint.com/:v:/g/personal/tp076782_mail_apu_edu_my/IQARdiHlD19yT5Zu88qqouThAXyo6dZ0aG4kA3VFUWRsdbw?e=yD3Ru1
+
 ---
 
 ## 🚀 Features
